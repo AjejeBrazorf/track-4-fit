@@ -1,69 +1,31 @@
-export type SiteConfig = typeof siteConfig;
+import { PATHS } from '@/config/PATHS'
+
+export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: 'Track 4 Fit',
+  description: '',
   navItems: [
     {
-      label: "Home",
-      href: "/",
+      label: 'Home',
+      href: PATHS.home,
     },
     {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
+      label: 'Dashboard',
+      href: PATHS.dashboard.index,
     },
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
+      label: 'Home',
+      href: PATHS.home,
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
-    {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
+      label: 'Dashboard',
+      href: PATHS.dashboard.index,
     },
   ],
-  links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
-};
+  authSecretKey: process.env.AUTH_SECRET,
+  authDomain: process.env.AUTH_COOKIE_STORAGE_DOMAIN,
+  authCookieName: process.env.AUTH_COOKIE_NAME,
+} as const

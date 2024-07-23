@@ -1,43 +1,44 @@
-import { Metadata, Viewport } from "next";
-import clsx from "clsx";
-import { ReactNode } from "react";
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 
-import { Navbar } from "../components/navbar";
+import { Navbar } from '@/components/navbar'
+import { AuthProvider } from '@/app/plugin/AuthContext'
+import { verifySession } from '@/lib/session'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: {
-    default: "siteConfig.name",
-    template: `%s - ${"siteConfig.name"}`,
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
   },
-  description: "siteConfig.description",
+  description: siteConfig.description,
   icons: {
-    icon: "/favicon.ico",
+    icon: '/favicon.ico',
   },
-};
+}
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-};
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode
+}) {
+  // TODO: implementare async Auth()
+  const state = await verifySession()
 
-export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang='en'>
       <head />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          //fontSans.variable,
-        )}
-      >
-        <div>
+      <body>
+        <AuthProvider
+          value={{
+            logged: !!state,
+            authUserInfo: state ? { ...state } : null,
+          }}>
           <Navbar />
           <main>{children}</main>
           <footer>footer</footer>
-        </div>
+        </AuthProvider>
       </body>
     </html>
-  );
+  )
 }
