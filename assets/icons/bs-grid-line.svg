@@ -1,0 +1,10 @@
+<svg viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="grid">
+<g id="Vector">
+<path d="M12.1667 3.5H4V11.6667H12.1667V3.5Z" stroke="currentColor" stroke-width="1.3125" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25 3.5H16.8333V11.6667H25V3.5Z" stroke="currentColor" stroke-width="1.3125" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25 16.3333H16.8333V24.5H25V16.3333Z" stroke="currentColor" stroke-width="1.3125" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.1667 16.3333H4V24.5H12.1667V16.3333Z" stroke="currentColor" stroke-width="1.3125" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>
