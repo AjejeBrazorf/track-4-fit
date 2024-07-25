@@ -1,4 +1,5 @@
-import type {StorybookConfig} from '@storybook/nextjs'
+import * as path from 'path'
+import type { StorybookConfig } from '@storybook/nextjs'
 
 const config: StorybookConfig = {
   stories: [
@@ -6,16 +7,26 @@ const config: StorybookConfig = {
     '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
-    '@storybook/addon-onboarding',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@chromatic-com/storybook',
     '@storybook/addon-interactions',
-    '@storybook/preset-scss'
+    {
+      name: '@storybook/addon-styling',
+      options: {},
+    },
   ],
+  docs: {
+    docsMode: true,
+    defaultName: 'Track4FitBook'
+  },
   framework: {
     name: '@storybook/nextjs',
-    options: {},
+    options: {
+      image: {
+        loading: 'eager',
+      },
+      nextConfigPath: path.resolve(__dirname, '../next.config.js'),
+    },
   },
   staticDirs: ['../public'],
 }
