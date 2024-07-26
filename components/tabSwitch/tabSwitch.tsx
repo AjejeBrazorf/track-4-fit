@@ -9,7 +9,6 @@ import classes from './tabSwitch.module.scss'
 interface TabSwitchProps<T> {
   'data-testid'?: string
   inverted?: boolean
-  name?: string
   onChange: (value: T) => void
   options: { label: ReactNode; value: T; tabView: ReactNode }[]
   value: T
@@ -19,16 +18,12 @@ interface TabSwitchProps<T> {
 export const TabSwitch = <T extends string>({
   'data-testid': dataTestId = 'radio-switch',
   inverted = false,
-  name,
   onChange,
   options,
   value,
   variant,
 }: TabSwitchProps<T>) => {
   const activeIndex = useMemo(() => {
-    console.log(value)
-    console.log(options.map((option) => option.value))
-    console.log(options.findIndex((option) => option.value === value))
     return options.findIndex((option) => option.value === value)
   }, [options, value])
   const switchStyle = { '--options-length': options.length } as CSSProperties
@@ -49,15 +44,15 @@ export const TabSwitch = <T extends string>({
         <div className={classes.optionsContainer}>
           {options.map(({ label, value: optionValue }) => {
             return (
-              <span
+              <button
+                type='button'
                 data-testid={`${dataTestId}-item-${optionValue}`}
                 onClick={() => {
-                  console.log(optionValue)
                   onChange(optionValue)
                 }}
                 key={optionValue}>
                 {label}
-              </span>
+              </button>
             )
           })}
           <div className={classes.selection} style={slidingPanelStyle} />

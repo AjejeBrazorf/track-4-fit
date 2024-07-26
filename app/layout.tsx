@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import { verifySession } from '@/app/plugin/AuthContext/session'
 import { Navbar } from '@/components/navbar'
 import { AuthProvider } from '@/app/plugin/AuthContext'
-import { verifySession } from '@/lib/session'
 import { siteConfig } from '@/config/siteConfig'
 
 export const metadata: Metadata = {
@@ -17,22 +17,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
   // TODO: implementare async Auth()
   const state = await verifySession()
 
   return (
     <html suppressHydrationWarning lang='en'>
-      <head />
+      <head title={siteConfig.name} />
       <body>
         <AuthProvider
           value={{
             logged: !!state,
-            authUserInfo: state ? { ...state } : null,
+            authUserInfo: state?.user ?? null,
           }}>
           <Navbar />
           <main>{children}</main>
@@ -42,3 +38,5 @@ export default async function RootLayout({
     </html>
   )
 }
+
+export default RootLayout

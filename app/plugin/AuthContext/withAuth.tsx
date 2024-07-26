@@ -4,8 +4,8 @@ import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { verifySession } from '@/lib/session'
 import { PATHS } from '@/config/PATHS'
+import { verifySession } from '@/app/plugin/AuthContext/session'
 
 export const withAuth = (WrappedComponent: FC) => {
   const AuthComponent: FC = () => {

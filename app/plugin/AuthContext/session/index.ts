@@ -7,7 +7,7 @@ import { cookies } from 'next/headers'
 
 import { siteConfig } from '@/config/siteConfig'
 
-import type { Session, SessionPayload } from './types.d'
+import type { Session, SessionPayload } from './types'
 
 const { secretKey } = siteConfig.auth
 const key = new TextEncoder().encode(secretKey)
@@ -46,6 +46,7 @@ export async function createSession(payload: SessionPayload) {
     sameSite: 'lax',
     path: '/',
   })
+  return verifySession()
 }
 
 export async function verifySession() {
@@ -56,14 +57,7 @@ export async function verifySession() {
     return null
   }
 
-  return (
-    session.userId
-      ? {
-          userId: Number(session.userId),
-          email: session.email,
-        }
-      : null
-  ) as Session
+  return (session.user.uid ? session : null) as Session
 }
 
 export async function updateSession() {

@@ -3,10 +3,13 @@
 import type { ReactNode } from 'react'
 import React, { useCallback, useMemo, useState } from 'react'
 
-import { createSession, deleteSession } from '@/lib/session'
-import { SignInT4F } from '@/app/auth/track4fitAuthService'
+import { SignIn } from '@/app/api/auth/signIn'
+import { SignOut } from '@/app/api/auth/signOut'
+import { SignUp } from '@/app/api/auth/signUp'
+import type { User } from '@/app/plugin/AuthContext/types'
+import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
 
-import type { AuthContextState, AuthUserInfo } from './AuthContext'
+import type { AuthContextState } from './AuthContext'
 import { AuthContext } from './AuthContext'
 
 const AuthProvider = ({
@@ -18,7 +21,6 @@ const AuthProvider = ({
 }) => {
   const [state, setState] = useState<AuthContextState>(initialValue)
 
-  // Mock sign-in function
   const signIn = useCallback(
     async (formData: FormData): Promise<AuthContextState> => {
       const credentials = {
@@ -26,31 +28,35 @@ const AuthProvider = ({
         password: formData.get('password') as string,
       }
 
-      const res = await SignInT4F(credentials)
-      // Mock implementation: authenticate and retrieve user info
-      const userInfo = {
-        userId: res.userCredential.user.uid as string,
-        email: res.userCredential.user.email,
-        idToken: res.userCredential._tokenResponse.idToken,
-        expiresIn: res.userCredential._tokenResponse.expiresIn,
+      const { data, error } = await SignIn(credentials)
+      if (error || !data) {
+        return new Promise((resolve) => {
+          resolve(state)
+        })
       }
-      await createSession({ ...credentials, ...userInfo })
+      const session = await createSession({
+        ...data.userCredential,
+        token: data.userCredential._tokenResponse,
+      })
+      if (!session) {
+        throw new Error('error while creating the session')
+      }
 
       const newState = {
         logged: true,
-        authUserInfo: userInfo,
+        authUserInfo: session.user!,
       }
       setState(newState)
       return new Promise((resolve) => {
         resolve(newState)
       })
     },
-    []
+    [state]
   )
 
   // Mock sign-out function
   const signOut = useCallback(async () => {
-    // Mock implementation: sign out
+    await SignOut()
     await deleteSession()
     setState({
       logged: false,
@@ -65,23 +71,16 @@ const AuthProvider = ({
         email: formData.get('email') as string,
         password: formData.get('password') as string,
       }
-      // Mock implementation: create and retrieve user info
-      const userInfo: AuthUserInfo & {
-        idToken: string
-        expiresAt: string
-      } = {
-        userId: '1',
-        email: credentials.email,
-        idToken: 'mock-id-token',
-        expiresAt: 'mock-expires-at',
-      }
-      if (!userInfo) {
-        throw new Error('Failed to sign up')
+      const { data, error } = await SignUp(credentials)
+      if (error || !data) {
+        return new Promise((resolve) => {
+          resolve(state)
+        })
       }
 
       return signIn(formData)
     },
-    [signIn]
+    [signIn, state]
   )
 
   // Mock get JWT token function
@@ -99,7 +98,7 @@ const AuthProvider = ({
 
   const value: {
     signIn: (formData: FormData) => Promise<AuthContextState>
-    currentUserInfo: () => Promise<AuthUserInfo | undefined | null>
+    currentUserInfo: () => Promise<User | undefined | null>
     signOut: () => Promise<void>
     getJwtToken: () => Promise<string>
     state: AuthContextState

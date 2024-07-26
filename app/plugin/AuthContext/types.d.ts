@@ -54,22 +54,4 @@ export type SignInResponse = {
   userCredential: UserCredential
 }
 
-export const SignInT4F = async (credentials: Credetianls) => {
-  const res = await fetch('/api/login-firebase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
-    credentials: 'include',
-  })
-  if (!res.ok) {
-    console.error('Network response was not ok:', res.statusText)
-    const errorDetails = await res.text()
-    console.error('Error details:', errorDetails)
-  }
-
-  return (await res.json()) as SignInResponse
-}
-export const SignUpT4F = (credentials: Credetianls) => {}
-export const SignOutT4F = () => {}
+type SignInReturnType = { error?: string; data?: SignInResponse }

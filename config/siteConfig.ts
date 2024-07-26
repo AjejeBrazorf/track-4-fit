@@ -30,5 +30,5 @@ export const siteConfig = {
     domain: process.env.AUTH_COOKIE_STORAGE_DOMAIN,
     cookieName: process.env.AUTH_COOKIE_NAME,
   },
-  apiUrl: process.env.API_URL,
+  apiUrl: process.env.NEXT_PUBLIC_API_URL,
 } as const
