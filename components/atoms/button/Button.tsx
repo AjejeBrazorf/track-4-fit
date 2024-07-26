@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button as TamaButton } from '@tamagui/core'
 
 import style from './button.module.scss'
 
@@ -37,7 +38,7 @@ export const Button = ({
 }: ButtonProps) => {
   const mode = primary ? style.storybookButton : style.storybookButton
   return (
-    <button
+    <TamaButton
       type='button'
       className={[style.storybookButton, size === 'small' && mode].join(' ')}
       {...props}>
@@ -47,6 +48,6 @@ export const Button = ({
           background-color: ${backgroundColor};
         }
       `}</style>
-    </button>
+    </TamaButton>
   )
 }
