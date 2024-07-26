@@ -4,17 +4,18 @@ import type { ReactNode } from 'react'
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { createSession, deleteSession } from '@/lib/session'
+import { SignInT4F } from '@/app/auth/track4fitAuthService'
 
 import type { AuthContextState, AuthUserInfo } from './AuthContext'
 import { AuthContext } from './AuthContext'
 
-function AuthProvider({
+const AuthProvider = ({
   value: initialValue,
   children,
 }: {
   value: AuthContextState
   children: ReactNode
-}) {
+}) => {
   const [state, setState] = useState<AuthContextState>(initialValue)
 
   // Mock sign-in function
@@ -24,19 +25,16 @@ function AuthProvider({
         email: formData.get('email') as string,
         password: formData.get('password') as string,
       }
-      // Mock implementation: authenticate and retrieve user info
-      const userInfo: AuthUserInfo & {
-        idToken: string
-        userId: number
-        expiresAt: string
-      } = {
-        userId: 1,
-        email: credentials.email,
-        idToken: 'mock-id-token',
-        expiresAt: 'mock-expires-at',
-      }
 
-      await createSession({ ...credentials, ...userInfo, userId: 1 })
+      const res = await SignInT4F(credentials)
+      // Mock implementation: authenticate and retrieve user info
+      const userInfo = {
+        userId: res.userCredential.user.uid as string,
+        email: res.userCredential.user.email,
+        idToken: res.userCredential._tokenResponse.idToken,
+        expiresIn: res.userCredential._tokenResponse.expiresIn,
+      }
+      await createSession({ ...credentials, ...userInfo })
 
       const newState = {
         logged: true,
@@ -44,7 +42,7 @@ function AuthProvider({
       }
       setState(newState)
       return new Promise((resolve) => {
-        resolve(newState as AuthContextState)
+        resolve(newState)
       })
     },
     []
@@ -70,10 +68,9 @@ function AuthProvider({
       // Mock implementation: create and retrieve user info
       const userInfo: AuthUserInfo & {
         idToken: string
-        userId: number
         expiresAt: string
       } = {
-        userId: 1,
+        userId: '1',
         email: credentials.email,
         idToken: 'mock-id-token',
         expiresAt: 'mock-expires-at',

@@ -1,8 +1,8 @@
 export type Session = SessionPayload | null
 
 export type SessionPayload = {
-  userId: number
+  userId: string
   email: string
   idToken: string
-  expiresAt: string
+  expiresIn: string
 }

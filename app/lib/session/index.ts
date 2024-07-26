@@ -5,12 +5,14 @@
 import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 
+import { siteConfig } from '@/config/siteConfig'
+
 import type { Session, SessionPayload } from './types.d'
 
-const secretKey = process.env.AUTH_SECRET
+const { secretKey } = siteConfig.auth
 const key = new TextEncoder().encode(secretKey)
-const domain = process.env.AUTH_COOKIE_STORAGE_DOMAIN
-const cookieName = process.env.AUTH_COOKIE_NAME ?? 'session'
+const { domain } = siteConfig.auth
+const cookieName = siteConfig.auth.cookieName ?? 'session'
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
@@ -33,14 +35,14 @@ export async function decrypt(session: string | undefined = '') {
 }
 
 export async function createSession(payload: SessionPayload) {
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000)
+  const expiresIn = new Date(Date.now() + 60 * 60 * 1000)
   const session = await encrypt(payload)
 
   cookies().set(cookieName, session, {
     domain,
     httpOnly: process.env.NODE_ENV === 'production',
     secure: process.env.NODE_ENV === 'production',
-    expires: expiresAt,
+    expires: expiresIn,
     sameSite: 'lax',
     path: '/',
   })

@@ -25,7 +25,10 @@ export const siteConfig = {
       href: PATHS.dashboard.index,
     },
   ],
-  authSecretKey: process.env.AUTH_SECRET,
-  authDomain: process.env.AUTH_COOKIE_STORAGE_DOMAIN,
-  authCookieName: process.env.AUTH_COOKIE_NAME,
+  auth: {
+    secretKey: process.env.AUTH_SECRET,
+    domain: process.env.AUTH_COOKIE_STORAGE_DOMAIN,
+    cookieName: process.env.AUTH_COOKIE_NAME,
+  },
+  apiUrl: process.env.API_URL,
 } as const

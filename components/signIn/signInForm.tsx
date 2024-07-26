@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/app/plugin/AuthContext'
 
-export function SignInForm({ onSubmit }: { onSubmit?: () => void }) {
+export const SignInForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   // TODO: Rivedere la gestione degli errori
   // TODO: Rivedere definizione metodi useAuth
   const { signIn } = useAuth()

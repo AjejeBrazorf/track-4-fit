@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Navbar } from '@/components/navbar'
 import { AuthProvider } from '@/app/plugin/AuthContext'
 import { verifySession } from '@/lib/session'
-import { siteConfig } from '@/config/site'
+import { siteConfig } from '@/config/siteConfig'
 
 export const metadata: Metadata = {
   title: {

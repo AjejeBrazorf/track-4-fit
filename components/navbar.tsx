@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { siteConfig } from '@/config/site'
+import { siteConfig } from '@/config/siteConfig'
 import { AuthButton } from '@/components/authButton'
 
 const menuItems = siteConfig.navMenuItems
