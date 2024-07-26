@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { SignIn } from '@/app/api/auth/signIn'
 import { SignOut } from '@/app/api/auth/signOut'
 import { SignUp } from '@/app/api/auth/signUp'
-import type { User } from '@/app/plugin/AuthContext/types'
+import type { Credentials, User } from '@/app/plugin/AuthContext/types'
 import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
 
 import type { AuthContextState } from './AuthContext'
@@ -22,12 +22,7 @@ const AuthProvider = ({
   const [state, setState] = useState<AuthContextState>(initialValue)
 
   const signIn = useCallback(
-    async (formData: FormData): Promise<AuthContextState> => {
-      const credentials = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      }
-
+    async (credentials: Credentials): Promise<AuthContextState> => {
       const { data, error } = await SignIn(credentials)
       if (error || !data) {
         return new Promise((resolve) => {
@@ -66,11 +61,7 @@ const AuthProvider = ({
 
   // Mock sign-up function
   const signUp = useCallback(
-    async (formData: FormData): Promise<AuthContextState> => {
-      const credentials = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      }
+    async (credentials: Credentials): Promise<AuthContextState> => {
       const { data, error } = await SignUp(credentials)
       if (error || !data) {
         return new Promise((resolve) => {
@@ -78,7 +69,7 @@ const AuthProvider = ({
         })
       }
 
-      return signIn(formData)
+      return signIn(credentials)
     },
     [signIn, state]
   )
@@ -97,12 +88,12 @@ const AuthProvider = ({
   }, [state.authUserInfo])
 
   const value: {
-    signIn: (formData: FormData) => Promise<AuthContextState>
+    signIn: (credentials: Credentials) => Promise<AuthContextState>
     currentUserInfo: () => Promise<User | undefined | null>
     signOut: () => Promise<void>
     getJwtToken: () => Promise<string>
     state: AuthContextState
-    signUp: (formData: FormData) => Promise<AuthContextState>
+    signUp: (credentials: Credentials) => Promise<AuthContextState>
   } = useMemo(
     () => ({
       state,
