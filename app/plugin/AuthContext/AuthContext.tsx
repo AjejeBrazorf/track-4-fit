@@ -4,9 +4,8 @@ import { createContext, useContext } from 'react'
 
 import type { Credentials, User } from '@/app/plugin/AuthContext/types'
 
-export type AuthUserInfo = {
-  userId: string
-  email: string
+export type AuthContextError = {
+  message: string
 }
 
 export interface AuthContextState {
@@ -14,14 +13,15 @@ export interface AuthContextState {
   authUserInfo: User | undefined | null
 }
 
+export interface AuthResponse {
+  data: AuthContextState
+  error?: AuthContextError
+}
+
 export interface AuthContextValue {
   state: AuthContextState
-  signIn(
-    formData: Credentials
-  ): PromiseLike<AuthContextState | null | undefined>
-  signUp(
-    formData: Credentials
-  ): PromiseLike<AuthContextState | null | undefined>
+  signIn(formData: Credentials): PromiseLike<AuthResponse>
+  signUp(formData: Credentials): PromiseLike<AuthResponse>
   signOut(): PromiseLike<void>
   getJwtToken(): PromiseLike<string | null>
   currentUserInfo(): PromiseLike<User | null | undefined>

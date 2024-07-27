@@ -3,7 +3,7 @@
 import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useAuth } from '@/app/plugin/AuthContext'
 import type { SignInFormType } from '@/components/signIn/types'
@@ -21,6 +21,7 @@ export const SignInFormSchema = yup.object({
 
 export const SignInForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { signIn } = useAuth()
+  const [asyncError, setAsyncError] = useState('')
   const {
     values,
     handleChange,
@@ -36,10 +37,14 @@ export const SignInForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     },
     validationSchema: SignInFormSchema,
     onSubmit: async (values) => {
-      debugger
-      if (inactive) return
-      await signIn(values)
-      onSubmit?.()
+      if (!isValid || isValidating) return
+      const { error } = await signIn(values)
+      if (error) {
+        setAsyncError(error.message)
+      }
+      if (!error) {
+        onSubmit?.()
+      }
     },
   })
 
@@ -57,8 +62,7 @@ export const SignInForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       onSubmit={(e) => {
         e.preventDefault()
         handleSubmit()
-      }}
-      aria-disabled={inactive}>
+      }}>
       {busy && <div> loader</div>}
       <input
         name='email'
@@ -79,6 +83,7 @@ export const SignInForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       <button type='submit' disabled={inactive}>
         Sign In
       </button>
+      {asyncError}
     </form>
   )
 }

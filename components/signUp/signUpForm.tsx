@@ -1,10 +1,9 @@
 'use client'
 
-// TODO: capire se usare yup o altro
 import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useAuth } from '@/app/plugin/AuthContext'
 import type { SignUpFormType } from '@/components/signUp/types'
@@ -22,6 +21,7 @@ export const SignUpFormSchema = yup.object({
 
 export const SignUpForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   const { signUp } = useAuth()
+  const [asyncError, setAsyncError] = useState('')
   const {
     values,
     handleChange,
@@ -37,23 +37,32 @@ export const SignUpForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     },
     validationSchema: SignUpFormSchema,
     onSubmit: async (values) => {
-      debugger
-      if (inactive) return
-      await signUp(values)
-      onSubmit?.()
+      if (!isValid || isValidating) return
+      const { error } = await signUp(values)
+      if (error) {
+        setAsyncError(error.message)
+      }
+      if (!error) {
+        onSubmit?.()
+      }
     },
   })
 
-  const busy = useMemo(() => isValidating || isSubmitting, [])
-  const inactive = useMemo(() => !isValid || isValidating || isSubmitting, [])
+  const busy = useMemo(
+    () => isValidating || isSubmitting,
+    [isSubmitting, isValidating]
+  )
+  const inactive = useMemo(
+    () => !isValid || isValidating || isSubmitting,
+    [isSubmitting, isValid, isValidating]
+  )
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
         handleSubmit()
-      }}
-      aria-disabled={inactive}>
+      }}>
       {busy && <div> loader</div>}
       <input
         name='email'
@@ -74,6 +83,7 @@ export const SignUpForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       <button type='submit' disabled={inactive}>
         Sign Up
       </button>
+      {asyncError}
     </form>
   )
 }

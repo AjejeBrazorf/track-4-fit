@@ -1,10 +1,10 @@
 import { siteConfig } from '@/config/siteConfig'
 import type {
-  Credetianls,
+  Credentials,
   SignInReturnType,
 } from '@/app/plugin/AuthContext/types'
 
-export async function SignUp(credentials: Credetianls) {
+export async function SignUp(credentials: Credentials) {
   const res = await fetch(`${siteConfig.apiUrl}/signup-firebase`, {
     method: 'POST',
     headers: {
@@ -14,9 +14,7 @@ export async function SignUp(credentials: Credetianls) {
     credentials: 'include',
   })
   if (!res.ok) {
-    console.error('Network response was not ok:', res.statusText)
     const errorDetails = await res.text()
-    console.error('Error details:', errorDetails)
     return { error: errorDetails }
   }
 

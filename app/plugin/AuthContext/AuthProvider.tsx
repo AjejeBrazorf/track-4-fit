@@ -9,7 +9,7 @@ import { SignUp } from '@/app/api/auth/signUp'
 import type { Credentials, User } from '@/app/plugin/AuthContext/types'
 import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
 
-import type { AuthContextState } from './AuthContext'
+import type { AuthContextState, AuthResponse } from './AuthContext'
 import { AuthContext } from './AuthContext'
 
 const AuthProvider = ({
@@ -22,11 +22,11 @@ const AuthProvider = ({
   const [state, setState] = useState<AuthContextState>(initialValue)
 
   const signIn = useCallback(
-    async (credentials: Credentials): Promise<AuthContextState> => {
+    async (credentials: Credentials): Promise<AuthResponse> => {
       const { data, error } = await SignIn(credentials)
       if (error || !data) {
         return new Promise((resolve) => {
-          resolve(state)
+          resolve({ data: state, error: { message: error ?? 'unknown error' } })
         })
       }
       const session = await createSession({
@@ -39,11 +39,11 @@ const AuthProvider = ({
 
       const newState = {
         logged: true,
-        authUserInfo: session.user!,
+        authUserInfo: session.user,
       }
       setState(newState)
       return new Promise((resolve) => {
-        resolve(newState)
+        resolve({ data: newState })
       })
     },
     [state]
@@ -61,11 +61,11 @@ const AuthProvider = ({
 
   // Mock sign-up function
   const signUp = useCallback(
-    async (credentials: Credentials): Promise<AuthContextState> => {
+    async (credentials: Credentials): Promise<AuthResponse> => {
       const { data, error } = await SignUp(credentials)
       if (error || !data) {
         return new Promise((resolve) => {
-          resolve(state)
+          resolve({ data: state, error: { message: error ?? 'unknown error' } })
         })
       }
 
@@ -88,12 +88,12 @@ const AuthProvider = ({
   }, [state.authUserInfo])
 
   const value: {
-    signIn: (credentials: Credentials) => Promise<AuthContextState>
+    signIn: (credentials: Credentials) => Promise<AuthResponse>
     currentUserInfo: () => Promise<User | undefined | null>
     signOut: () => Promise<void>
     getJwtToken: () => Promise<string>
     state: AuthContextState
-    signUp: (credentials: Credentials) => Promise<AuthContextState>
+    signUp: (credentials: Credentials) => Promise<AuthResponse>
   } = useMemo(
     () => ({
       state,
