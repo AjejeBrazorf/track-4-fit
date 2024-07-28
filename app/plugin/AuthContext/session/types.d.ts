@@ -1,8 +1,5 @@
-import type { TokenResponse, User } from '@/app/plugin/AuthContext/types'
+import type { UserInfo } from '@/app/plugin/AuthContext/types'
 
 export type Session = SessionPayload | null
 
-export type SessionPayload = {
-  user: User
-  token: TokenResponse
-}
+export type SessionPayload = UserInfo

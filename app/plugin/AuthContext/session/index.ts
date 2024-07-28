@@ -1,7 +1,5 @@
 'use server'
 
-// export * from "./index.d";
-
 import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 
@@ -40,7 +38,7 @@ export async function createSession(payload: SessionPayload) {
 
   cookies().set(cookieName, session, {
     domain,
-    httpOnly: process.env.NODE_ENV === 'production',
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     expires: expiresIn,
     sameSite: 'lax',
@@ -57,7 +55,7 @@ export async function verifySession() {
     return null
   }
 
-  return (session.user.uid ? session : null) as Session
+  return session as Session
 }
 
 export async function updateSession() {

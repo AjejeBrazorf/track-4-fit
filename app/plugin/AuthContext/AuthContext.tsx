@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from 'react'
 
-import type { Credentials, User } from '@/app/plugin/AuthContext/types'
+import type { Credentials, UserInfo } from '@/app/plugin/AuthContext/types'
 
 export type AuthContextError = {
   message: string
@@ -10,7 +10,7 @@ export type AuthContextError = {
 
 export interface AuthContextState {
   logged: boolean
-  authUserInfo: User | undefined | null
+  authUserInfo: UserInfo | undefined | null
 }
 
 export interface AuthResponse {
@@ -24,7 +24,7 @@ export interface AuthContextValue {
   signUp(formData: Credentials): PromiseLike<AuthResponse>
   signOut(): PromiseLike<void>
   getJwtToken(): PromiseLike<string | null>
-  currentUserInfo(): PromiseLike<User | null | undefined>
+  currentUserInfo: () => Promise<UserInfo | undefined | null>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)

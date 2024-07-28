@@ -31,7 +31,7 @@ export type User = {
   appName: string
 }
 
-export type TokenResponse = {
+export type UserInfo = {
   kind: string
   localId: string
   email: string
@@ -45,7 +45,7 @@ export type TokenResponse = {
 export type UserCredential = {
   user: User
   providerId: string | null
-  _tokenResponse: TokenResponse
+  _tokenResponse: UserInfo
   operationType: string
 }
 

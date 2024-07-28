@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   // TODO: implementare async Auth()
-  const state = await verifySession()
+  const session = await verifySession()
 
   return (
     <html suppressHydrationWarning lang='en'>
@@ -27,8 +27,8 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
       <body>
         <AuthProvider
           value={{
-            logged: !!state,
-            authUserInfo: state?.user ?? null,
+            logged: !!session,
+            authUserInfo: session,
           }}>
           <Navbar />
           <main>{children}</main>

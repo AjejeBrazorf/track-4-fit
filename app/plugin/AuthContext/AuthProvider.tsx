@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { SignIn } from '@/app/api/auth/signIn'
 import { SignOut } from '@/app/api/auth/signOut'
 import { SignUp } from '@/app/api/auth/signUp'
-import type { Credentials, User } from '@/app/plugin/AuthContext/types'
+import type { Credentials, UserInfo } from '@/app/plugin/AuthContext/types'
 import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
 
 import type { AuthContextState, AuthResponse } from './AuthContext'
@@ -29,17 +29,14 @@ const AuthProvider = ({
           resolve({ data: state, error: { message: error ?? 'unknown error' } })
         })
       }
-      const session = await createSession({
-        ...data.userCredential,
-        token: data.userCredential._tokenResponse,
-      })
+      const session = await createSession(data.userCredential._tokenResponse)
       if (!session) {
         throw new Error('error while creating the session')
       }
 
       const newState = {
         logged: true,
-        authUserInfo: session.user,
+        authUserInfo: data.userCredential._tokenResponse,
       }
       setState(newState)
       return new Promise((resolve) => {
@@ -89,7 +86,7 @@ const AuthProvider = ({
 
   const value: {
     signIn: (credentials: Credentials) => Promise<AuthResponse>
-    currentUserInfo: () => Promise<User | undefined | null>
+    currentUserInfo: () => Promise<UserInfo | undefined | null>
     signOut: () => Promise<void>
     getJwtToken: () => Promise<string>
     state: AuthContextState
