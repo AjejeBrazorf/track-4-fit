@@ -2,23 +2,29 @@
 
 import { createContext, useContext } from 'react'
 
-export type AuthUserInfo = {
-  userId: number
-  email: string
+import type { Credentials, UserInfo } from '@/app/plugin/AuthContext/types'
+
+export type AuthContextError = {
+  message: string
 }
 
 export interface AuthContextState {
   logged: boolean
-  authUserInfo: AuthUserInfo | undefined | null
+  authUserInfo: UserInfo | undefined | null
+}
+
+export interface AuthResponse {
+  data: AuthContextState
+  error?: AuthContextError
 }
 
 export interface AuthContextValue {
   state: AuthContextState
-  signIn(formData: FormData): PromiseLike<AuthContextState | null | undefined>
-  signUp(formData: FormData): PromiseLike<AuthContextState | null | undefined>
+  signIn(formData: Credentials): PromiseLike<AuthResponse>
+  signUp(formData: Credentials): PromiseLike<AuthResponse>
   signOut(): PromiseLike<void>
   getJwtToken(): PromiseLike<string | null>
-  currentUserInfo(): PromiseLike<AuthUserInfo | null | undefined>
+  currentUserInfo: () => Promise<UserInfo | undefined | null>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)

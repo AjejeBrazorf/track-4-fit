@@ -1,0 +1,52 @@
+.switch {
+  --base-color: black;
+  --contrast-color: white;
+  --contrast-color-text: black;
+  --padding: 16px;
+  padding: 0 var(--padding);
+  background: var(--base-color);
+  color: var(--contrast-color);
+  cursor: pointer;
+}
+
+.optionsContainer {
+  align-items: center;
+  border-radius: inherit;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--options-length), minmax(100px, 1fr));
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  min-height: 40px;
+  text-align: center;
+}
+
+.options > * {
+  height: 100%;
+  padding: var(--padding);
+  z-index: 1;
+  color: var(--contrast-color-text);
+}
+
+.selection {
+  --selection: 0;
+  box-sizing: border-box;
+  grid-column: 1 / span 1;
+  position: absolute;
+  transition: translate 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+  translate: calc(100% * (var(--selection, 1))) 0;
+  width: 100%;
+  z-index: 0;
+  background: var(--contrast-color);
+  padding: 0 calc(var(--padding) / 4);
+  left: calc(var(--padding) / -4);
+  height: calc(100% - var(--padding));
+  top: calc(var(--padding) / 2);
+  mix-blend-mode: exclusion;
+}
+
+.view {
+  padding: 24px;
+  box-sizing: border-box;
+}

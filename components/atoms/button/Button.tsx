@@ -1,5 +1,5 @@
+import type { ReactNode } from 'react'
 import React from 'react'
-import { Button as TamaButton } from '@tamagui/core'
 
 import style from './button.module.scss'
 
@@ -19,7 +19,7 @@ export interface ButtonProps {
   /**
    * Button contents
    */
-  label: string
+  children: ReactNode
   /**
    * Optional click handler
    */
@@ -32,22 +32,16 @@ export interface ButtonProps {
 export const Button = ({
   primary = false,
   size = 'medium',
-  backgroundColor,
-  label,
+  children,
   ...props
 }: ButtonProps) => {
   const mode = primary ? style.storybookButton : style.storybookButton
   return (
-    <TamaButton
+    <button
       type='button'
       className={[style.storybookButton, size === 'small' && mode].join(' ')}
       {...props}>
-      {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
-    </TamaButton>
+      {children}
+    </button>
   )
 }

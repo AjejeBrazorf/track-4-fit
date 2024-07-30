@@ -2,12 +2,12 @@
 
 import { useAuth } from '@/app/plugin/AuthContext'
 import { SignOutForm } from '@/components/signOut'
-import { SignInModal } from '@/components/signIn/signInModal'
+import { AuthModal } from '@/components/authButton/authModal'
 
 const AuthButton = () => {
   const { state } = useAuth()
 
-  return state.logged ? <SignOutForm /> : <SignInModal />
+  return state.logged ? <SignOutForm /> : <AuthModal />
 }
 
 export { AuthButton }

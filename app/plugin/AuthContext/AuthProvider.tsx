@@ -3,56 +3,52 @@
 import type { ReactNode } from 'react'
 import React, { useCallback, useMemo, useState } from 'react'
 
-import { createSession, deleteSession } from '@/lib/session'
+import { SignIn } from '@/app/api/auth/signIn'
+import { SignOut } from '@/app/api/auth/signOut'
+import { SignUp } from '@/app/api/auth/signUp'
+import type { Credentials, UserInfo } from '@/app/plugin/AuthContext/types'
+import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
 
-import type { AuthContextState, AuthUserInfo } from './AuthContext'
+import type { AuthContextState, AuthResponse } from './AuthContext'
 import { AuthContext } from './AuthContext'
 
-function AuthProvider({
+const AuthProvider = ({
   value: initialValue,
   children,
 }: {
   value: AuthContextState
   children: ReactNode
-}) {
+}) => {
   const [state, setState] = useState<AuthContextState>(initialValue)
 
-  // Mock sign-in function
   const signIn = useCallback(
-    async (formData: FormData): Promise<AuthContextState> => {
-      const credentials = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
+    async (credentials: Credentials): Promise<AuthResponse> => {
+      const { data, error } = await SignIn(credentials)
+      if (error || !data) {
+        return new Promise((resolve) => {
+          resolve({ data: state, error: { message: error ?? 'unknown error' } })
+        })
       }
-      // Mock implementation: authenticate and retrieve user info
-      const userInfo: AuthUserInfo & {
-        idToken: string
-        userId: number
-        expiresAt: string
-      } = {
-        userId: 1,
-        email: credentials.email,
-        idToken: 'mock-id-token',
-        expiresAt: 'mock-expires-at',
+      const session = await createSession(data.userCredential._tokenResponse)
+      if (!session) {
+        throw new Error('error while creating the session')
       }
-
-      await createSession({ ...credentials, ...userInfo, userId: 1 })
 
       const newState = {
         logged: true,
-        authUserInfo: userInfo,
+        authUserInfo: data.userCredential._tokenResponse,
       }
       setState(newState)
       return new Promise((resolve) => {
-        resolve(newState as AuthContextState)
+        resolve({ data: newState })
       })
     },
-    []
+    [state]
   )
 
   // Mock sign-out function
   const signOut = useCallback(async () => {
-    // Mock implementation: sign out
+    await SignOut()
     await deleteSession()
     setState({
       logged: false,
@@ -62,29 +58,17 @@ function AuthProvider({
 
   // Mock sign-up function
   const signUp = useCallback(
-    async (formData: FormData): Promise<AuthContextState> => {
-      const credentials = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      }
-      // Mock implementation: create and retrieve user info
-      const userInfo: AuthUserInfo & {
-        idToken: string
-        userId: number
-        expiresAt: string
-      } = {
-        userId: 1,
-        email: credentials.email,
-        idToken: 'mock-id-token',
-        expiresAt: 'mock-expires-at',
-      }
-      if (!userInfo) {
-        throw new Error('Failed to sign up')
+    async (credentials: Credentials): Promise<AuthResponse> => {
+      const { data, error } = await SignUp(credentials)
+      if (error || !data) {
+        return new Promise((resolve) => {
+          resolve({ data: state, error: { message: error ?? 'unknown error' } })
+        })
       }
 
-      return signIn(formData)
+      return signIn(credentials)
     },
-    [signIn]
+    [signIn, state]
   )
 
   // Mock get JWT token function
@@ -101,12 +85,12 @@ function AuthProvider({
   }, [state.authUserInfo])
 
   const value: {
-    signIn: (formData: FormData) => Promise<AuthContextState>
-    currentUserInfo: () => Promise<AuthUserInfo | undefined | null>
+    signIn: (credentials: Credentials) => Promise<AuthResponse>
+    currentUserInfo: () => Promise<UserInfo | undefined | null>
     signOut: () => Promise<void>
     getJwtToken: () => Promise<string>
     state: AuthContextState
-    signUp: (formData: FormData) => Promise<AuthContextState>
+    signUp: (credentials: Credentials) => Promise<AuthResponse>
   } = useMemo(
     () => ({
       state,
