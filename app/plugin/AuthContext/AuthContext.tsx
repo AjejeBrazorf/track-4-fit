@@ -23,7 +23,7 @@ export interface AuthContextValue {
   signIn(formData: Credentials): PromiseLike<AuthResponse>
   signUp(formData: Credentials): PromiseLike<AuthResponse>
   signOut(): PromiseLike<void>
-  getJwtToken(): PromiseLike<string | null>
+  getJwtToken(): PromiseLike<string | undefined>
   currentUserInfo: () => Promise<UserInfo | undefined | null>
 }
 

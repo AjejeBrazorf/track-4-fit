@@ -17,4 +17,5 @@ export const siteConfig = {
     cookieName: process.env.AUTH_COOKIE_NAME,
   },
   apiUrl: process.env.NEXT_PUBLIC_API_URL,
+  graphQLUrl: process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? '',
 } as const

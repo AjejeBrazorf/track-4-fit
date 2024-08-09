@@ -1,11 +1,10 @@
-import { siteConfig } from '@/config/siteConfig'
 import type {
   Credentials,
   SignInReturnType,
 } from '@/app/plugin/AuthContext/types'
 
 export async function SignUp(credentials: Credentials) {
-  const res = await fetch(`${siteConfig.apiUrl}/signup-firebase`, {
+  const res = await fetch('api/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

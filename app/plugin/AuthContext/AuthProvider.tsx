@@ -7,7 +7,11 @@ import { SignIn } from '@/app/api/auth/signIn'
 import { SignOut } from '@/app/api/auth/signOut'
 import { SignUp } from '@/app/api/auth/signUp'
 import type { Credentials, UserInfo } from '@/app/plugin/AuthContext/types'
-import { createSession, deleteSession } from '@/app/plugin/AuthContext/session'
+import {
+  createSession,
+  deleteSession,
+  verifySession,
+} from '@/app/plugin/AuthContext/session'
 
 import type { AuthContextState, AuthResponse } from './AuthContext'
 import { AuthContext } from './AuthContext'
@@ -71,11 +75,8 @@ const AuthProvider = ({
     [signIn, state]
   )
 
-  // Mock get JWT token function
   const getJwtToken = useCallback(async () => {
-    // Mock implementation
-
-    return 'mock-jwt-token'
+    return (await verifySession())?.idToken
   }, [])
 
   // Mock current user info function
@@ -88,7 +89,7 @@ const AuthProvider = ({
     signIn: (credentials: Credentials) => Promise<AuthResponse>
     currentUserInfo: () => Promise<UserInfo | undefined | null>
     signOut: () => Promise<void>
-    getJwtToken: () => Promise<string>
+    getJwtToken: () => Promise<string | undefined>
     state: AuthContextState
     signUp: (credentials: Credentials) => Promise<AuthResponse>
   } = useMemo(

@@ -1,0 +1,5 @@
+query DashboardPage($userMail: String!) {
+    getUserByEmail(email: $userMail) {
+        id
+    }
+}

@@ -1,7 +1,5 @@
-import { siteConfig } from '@/config/siteConfig'
-
 export async function SignOut() {
-  const res = await fetch(`${siteConfig.apiUrl}/logout-firebase`, {
+  const res = await fetch('api/logout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
