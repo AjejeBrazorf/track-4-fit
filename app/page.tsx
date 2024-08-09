@@ -1,12 +1,5 @@
-import { TestClientComponent } from '@/components/TestClientComponent'
-
 const Homepage = () => {
-  return (
-    <section>
-      HomePage
-      <TestClientComponent />
-    </section>
-  )
+  return <section>Homepage</section>
 }
 
 export default Homepage

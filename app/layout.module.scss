@@ -1,0 +1,14 @@
+.main {
+  padding-top: 4rem;
+}
+
+.fontSatoshi {
+  font-family: var(--font-satoshi);
+}
+
+.fullScreen {
+  min-height: 100vh;
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

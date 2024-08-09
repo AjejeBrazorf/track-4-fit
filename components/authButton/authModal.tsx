@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { SignInForm } from '@/components/signIn/signInForm'
 import { TabSwitch } from '@/components/tabSwitch'
 import { SignUpForm } from '@/components/signUp'
+import { Button } from '@/components/ui/button'
 
 type AuthMode = 'sign-in' | 'sing-up'
 
@@ -13,9 +14,9 @@ export const AuthModal = () => {
   const [mode, setMode] = useState<AuthMode>('sign-in')
   return (
     <div>
-      <button type='button' onClick={() => setOpenModal(true)}>
+      <Button variant='ghost' type='button' onClick={() => setOpenModal(true)}>
         Sign In
-      </button>
+      </Button>
       <dialog
         open={openModal}
         onClose={() => setOpenModal(false)}

@@ -1,30 +1,16 @@
-import { PATHS } from '@/config/PATHS'
+import type { PathName } from '@/config/PATHS'
 
 export type SiteConfig = typeof siteConfig
 
+type NavItem = {
+  label: string
+  href: PathName
+}
 export const siteConfig = {
   name: 'Track 4 Fit',
   description: '',
-  navItems: [
-    {
-      label: 'Home',
-      href: PATHS.home,
-    },
-    {
-      label: 'Dashboard',
-      href: PATHS.dashboard.index,
-    },
-  ],
-  navMenuItems: [
-    {
-      label: 'Home',
-      href: PATHS.home,
-    },
-    {
-      label: 'Dashboard',
-      href: PATHS.dashboard.index,
-    },
-  ],
+  navItems: [] as NavItem[],
+  navMenuItems: [] as NavItem[],
   auth: {
     secretKey: process.env.AUTH_SECRET,
     domain: process.env.AUTH_COOKIE_STORAGE_DOMAIN,
